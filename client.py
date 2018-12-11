@@ -7,14 +7,13 @@ Ice.loadSlice('downloader.ice')
 import Example
 
 class Client(Ice.Application):
-
     def run(self, argv):
         base = self.communicator().stringToProxy(argv[1])
-        math = Example.MathPrx.checkedCast(base)
+        math = Example.DownloadPrx.checkedCast(base)
 
-        if not math:
-            raise RuntimeError("Invalid proxy")
-        print math.factorial(int(argv[2]))
+        if not downloader:
+            raise RuntimeError("invalid proxy")
+        #print(math.factorial(int(argv[2])))
         return 0
 
 if len(sys.argv) != 3:
