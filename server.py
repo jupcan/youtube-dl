@@ -54,8 +54,8 @@ class Server(Ice.Application):
         adapter.activate()
         work_queue.start()
         self.shutdownOnInterrupt()
-        broker.waitForShutdown()
+        ic.waitForShutdown()
         work_queue.destroy()
         return 0
-
+    
 sys.exit(Server().main(sys.argv))

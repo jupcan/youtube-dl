@@ -3,7 +3,7 @@
 "usage: {} <server> <value>"
 import sys
 import Ice
-Ice.loadSlice('factorial.ice')
+Ice.loadSlice('downloader.ice')
 import Example
 
 class Client(Ice.Application):
@@ -14,7 +14,6 @@ class Client(Ice.Application):
 
         if not math:
             raise RuntimeError("Invalid proxy")
-
         print math.factorial(int(argv[2]))
         return 0
 
