@@ -3,6 +3,6 @@
 distributed systems lab project
 #information
 the project files can be divided into 3 different types:
-- zeroc ice files: locator.config so that the client knows the server address, node[n] containing the path to the corresponding node data as well as the .txt icestdout file if it has one and finally, the xml beeing this one the core of the project with all the information of the nodes running, indirect communication between them and use of icestorm service to communicate through topics.
+- zeroc ice files: locator.config so that the client knows the server address, node[n] containing the path to the corresponding node data as well as the .txt icestdout file and the xml beeing this one the core of the project with all the information of the nodes running, indirect communication between them and use of icestorm service to communicate through ch.
 - python scripts
 - makefile to make the execution an easier task
