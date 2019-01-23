@@ -7,7 +7,7 @@ the project files can be divided into 3 different types:
 - **python scripts**: *downloader.ice* given by the teacher and containing the methods to be called, aka the interface we have to use, *synctimer.py* a client invocating methods through a timer to sync downloaderscheduler objects using the synctopic created and *server.py* which contains the schedulerfactory -a server waiting a request from synctimer and from the client- and *client.py* being a normal client with a proxy and allowing us to make use of the interface methods.  
 - **makefile** to make the whole project execution an easier task  
 
-*when we use the method *make* we create an downloaderscheduler object through schedulerfactory that allow us to request downloads, transferences, songs lists etc. and ehrn using *kill* we remove the aforemention previously created things.
+*when we use the method *make* we create an downloaderscheduler object through schedulerfactory that allow us to request downloads, transferences, songs lists etc. and when using *kill* we remove the aforemention previously created things.
 
 ## installation
 [**zeroc ice**](https://doc.zeroc.com/ice/3.7/release-notes/using-the-python-distribution) python client from pip source distribution
