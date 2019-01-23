@@ -3,6 +3,7 @@
 distributed systems lab project
 #information
 the project files can be divided into 3 different types:
-- zeroc ice files: locator.config so that the client knows the server address, node[n] containing the path to the corresponding node data as well as the .txt icestdout file and the xml beeing this one the core of the project with all the information of the nodes running, indirect communication between them and use of icestorm service to communicate through topics.
-- python scripts
-- makefile to make the execution an easier task
+- **zeroc ice files**: __locator.config__ so that the client knows the server address, __node[n]__ containing the path to the corresponding node data as well as the .txt icestdout file and the __xml__ beeing this one the core of the project with all the information of the nodes running, indirect communication between them and use of icestorm service to communicate through topics.
+- **python scripts**: __downloader.ice__ given by the teacher and containing the methods to be called, aka the interface we have to use, __synctimer.py__ a client invocating methods through a timer to sync downloaderscheduler objects using the synctopic created and __server.py__ which contains the schedulerfactory; a server waiting a request from synctimer and from the client, and __client.py__ being a normal client with a proxy and allowing us to make use of the downloader.ice interface methods.
+*when we use the method __make__ we create an downloaderscheduler object through schedulerfactory that allow us to request downloads, transferences, songs lists etc.
+- **makefile** to make the execution an easier task
