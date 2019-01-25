@@ -13,7 +13,7 @@ transfer file over ICE implementation
 import binascii
 import Ice
 Ice.loadSlice('downloader.ice')
-#pylint: disable=E0401
+#pylint:disable=E0401
 import Downloader
 
 class TransferI(Downloader.Transfer):
@@ -49,7 +49,7 @@ def receive(transfer, destination_file):
         remoteEOF = False
         while not remoteEOF:
             data = transfer.recv(BLOCK_SIZE)
-            # Remove additional byte added by str() at server
+            #remove additional byte added by str() at server
             if len(data) > 1:
                 data = data[1:]
             data = binascii.a2b_base64(data)

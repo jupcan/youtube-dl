@@ -8,9 +8,9 @@ import Ice
 import IceStorm
 import sys
 import youtube_dl
+Ice.loadSlice('downloader.ice')
 from Downloader import *
 import binascii
-Ice.loadSlice('downloader.ice')
 
 class NullLogger:
     '''
