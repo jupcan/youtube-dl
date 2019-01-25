@@ -1,24 +1,149 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-"usage: {} <server> <value>"
+
 import sys
 import Ice
-Ice.loadSlice('downloader.ice')
-import Example
+import IceStorm
+Ice.loadSlice('src/downloader.ice')
+import Downloader
+import binascii
+import time
 
-class Client(Ice.Application):
+BLOCK_SIZE = 10240
+
+class ProgressStatus(Downloader.ProgressEvent):
+    def __init__(self, client):
+        self.client = client
+
+    def notify(self, clipdata, current=None):
+        if self.client == None:
+            return
+        self.client.diccionario[clipdata.URL] = clipdata.status
+
+def receive(transfer, destination_file):
+    with open(destination_file, 'wb') as file_contents:
+        remoteEOF = False
+        while not remoteEOF:
+            data = transfer.recv(BLOCK_SIZE)
+            if len(data) > 1:
+                data = data[1:]
+            data = binascii.a2b_base64(data)
+            remoteEOF = len(data) < BLOCK_SIZE
+            if data:
+                file_contents.write(data)
+        transfer.end()
+
+class User(Ice.Application):
+    def __init__(self):
+        self.servers = {}
+
+    def Opciones(self, current=None):
+        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de canciones\n4.descargar canción\n5.obtener canción\n6.salir')
+
+    def Actuar(self, x, prx, current=None):
+        if x==1:
+            print('introduzca el nombre del servidor:')
+            name = input()
+            try:
+                nuevo = prx.make(name)
+                self.servers[name]=nuevo
+            except Downloader.SchedulerAlreadyExists:
+                print('error: scheduler ya existe')
+
+        elif x==2:
+            print('introduzca el nombre del servidor a eliminar:')
+            name = input()
+            try:
+                prx.kill(name)
+                del self.servers[name]
+            except Downloader.SchedulerNotFound:
+                print('error: scheduler no encontrado')
+
+        elif x==3:
+            print('servidor al que realizar la solicitud:')
+            name = input()
+            if name in self.servers:
+                res = self.servers[name].getSongListAsync()
+                while res.running():
+                    print('obteniendo lista de canciones...')
+                    time.sleep(1.0)
+                    if res.done():
+                        print('[obtenida]')
+                        lista = res.result()
+                        for x in lista:
+                            print(x)
+            else:
+                print('error')
+
+        elif x==4:
+            print('servidor al que realizar la solicitud:')
+            name = input()
+            if name in self.servers:
+                URL = input('introduce la url:\n')
+                res=self.servers[name].addDownloadTaskAsync(URL)
+                while res.running():
+                    print('descargando...')
+                    time.sleep(1.0)
+                    if res.done():
+                        print('[descargada]')
+            else:
+                print('error')
+
+        elif x==5:
+            print('servidor al que realizar la solicitud:')
+            name = input()
+            if name in self.servers:
+                cancion = input('introduce el nombre de la canción:')
+                res= self.servers[name].getAsync(cancion)
+                while res.running():
+                    print('transfiriendo...')
+                    time.sleep(1.0)
+                    if res.done():
+                        print('[transferida]')
+                        prx_transf= res.result()
+                cancion = input('nuevo nombre de la canción:')
+                nueva = cancion+".mp3"
+                receive(prx_transf, nueva)
+            else:
+                print('error')
+
+        elif x==6:
+            print('ha seleccionado salir')
+        else:
+            print('opción incorrecta')
+
+    def Main(self, prx, current=None):
+        if prx.availableSchedulers() > 0:
+            self.Opciones()
+            x = int(input('introduzca una opción:'))
+            if x != 6:
+                self.Actuar(x,prx)
+                self.Main(prx)
+        else:
+            posible=False
+            while not(posible):
+                print('introduzca el nombre de un servidor:')
+                name = input()
+                try:
+                    nuevo = prx.make(name)
+                    posible=True
+                    self.servers[name]=nuevo
+                except Downloader.SchedulerAlreadyExists:
+                    print('error: scheduler ya existe')
+                    posible=False
+                if not(posible):
+                    print('vuelva a intentarlo')
+            self.Main(prx)
+
     def run(self, argv):
-        base = self.communicator().stringToProxy(argv[1])
-        math = Example.DownloadPrx.checkedCast(base)
+        proxy = self.communicator().stringToProxy(argv[1])
+        factory = Downloader.SchedulerFactoryPrx.checkedCast(proxy)
 
-        if not downloader:
-            raise RuntimeError("invalid proxy")
-        #print(math.factorial(int(argv[2])))
+        if not factory:
+            raise RuntimeError('proxy factoría invalido')
+
+        self.Main(factory)
+        print('finalizando ejecución')
         return 0
 
-if len(sys.argv) != 3:
-    print(__doc__.format(__file__))
-    sys.exit(1)
-
-app = Client()
-sys.exit(app.main(sys.argv))
+sys.exit(User().main(sys.argv))
