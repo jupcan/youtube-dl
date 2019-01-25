@@ -1,11 +1,10 @@
 #!/bin/sh
 
-echo "---Creando directorios---"
+echo "creando directorios"
 mkdir -p /tmp/db/registry
 mkdir -p /tmp/db/node1
 
-echo "---Preparando archivos---"
-
+echo "copiando binarios"
 mkdir -p /tmp/db/practica
 cp downloader.ice /tmp/db/practica
 cp Factory.py /tmp/db/practica

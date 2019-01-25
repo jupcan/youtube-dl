@@ -42,8 +42,7 @@ class User(Ice.Application):
 
     def Actuar(self, x, prx, current=None):
         if x==1:
-            print('introduzca el nombre del servidor:')
-            name = input()
+            name = input('introduzca el nombre del servidor:')
             try:
                 nuevo = prx.make(name)
                 self.servers[name]=nuevo
@@ -51,8 +50,7 @@ class User(Ice.Application):
                 print('error: scheduler ya existe')
 
         elif x==2:
-            print('introduzca el nombre del servidor a eliminar:')
-            name = input()
+            name = input('introduzca el nombre del servidor a eliminar:')
             try:
                 prx.kill(name)
                 del self.servers[name]
@@ -60,8 +58,7 @@ class User(Ice.Application):
                 print('error: scheduler no encontrado')
 
         elif x==3:
-            print('servidor al que realizar la solicitud:')
-            name = input()
+            name = input('servidor al que realizar la solicitud:')
             if name in self.servers:
                 res = self.servers[name].getSongListAsync()
                 while res.running():
@@ -76,10 +73,9 @@ class User(Ice.Application):
                 print('error')
 
         elif x==4:
-            print('servidor al que realizar la solicitud:')
-            name = input()
+            name = input('servidor al que realizar la solicitud:')
             if name in self.servers:
-                URL = input('introduce la url:\n')
+                URL = input('introduce la url:')
                 res=self.servers[name].addDownloadTaskAsync(URL)
                 while res.running():
                     print('descargando...')
@@ -90,8 +86,7 @@ class User(Ice.Application):
                 print('error')
 
         elif x==5:
-            print('servidor al que realizar la solicitud:')
-            name = input()
+            name = input('servidor al que realizar la solicitud:')
             if name in self.servers:
                 cancion = input('introduce el nombre de la canción:')
                 res= self.servers[name].getAsync(cancion)
@@ -122,8 +117,7 @@ class User(Ice.Application):
         else:
             posible=False
             while not(posible):
-                print('introduzca el nombre de un servidor:')
-                name = input()
+                name = input('introduzca el nombre de un servidor:')
                 try:
                     nuevo = prx.make(name)
                     posible=True
@@ -138,10 +132,8 @@ class User(Ice.Application):
     def run(self, argv):
         proxy = self.communicator().stringToProxy(argv[1])
         factory = Downloader.SchedulerFactoryPrx.checkedCast(proxy)
-
         if not factory:
             raise RuntimeError('proxy factoría invalido')
-
         self.Main(factory)
         print('finalizando ejecución')
         return 0
