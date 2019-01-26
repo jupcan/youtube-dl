@@ -209,9 +209,8 @@ class SchedulerFactoryI(SchedulerFactory): ## por revisar
             id = Ice.stringToIdentity(name)
             self.ids.append(id)
             controller = DownloadSchedulerI(name)
-            qos = {}
             prx = current.adapter.add(controller,id)
-            sync = self.synctopic.subscribeAndGetPublisher(qos, prx)
+            sync = self.synctopic.getPublisher()
             self.adapters.append(sync)
             controller.publicador = SyncEventPrx.uncheckedCast(sync)
             statsproxy = self.statstopic.getPublisher()
@@ -241,7 +240,6 @@ class Server(Ice.Application):
 
         ic = self.communicator()
         adapter = ic.createObjectAdapter("PrinterAdapter")
-        qos = {}
         topic_name2 = "ProgressTopic"
         topic_name1 = "SyncTopic"
 
