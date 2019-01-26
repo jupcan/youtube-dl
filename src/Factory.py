@@ -150,7 +150,7 @@ class DownloadSchedulerI(DownloadScheduler,SyncEvent):
         return callback
 
     def get(self, song, current=None):
-        print('downloader {}: preparandose para transferir la canción {}'.format(self.name, song))
+        print('downloader {}: preparándose para transferir la canción {}'.format(self.name, song))
         controller = TransferI('{}{}'.format(self.path, song))
         prx = current.adapter.addWithUUID(controller)
         transfer = TransferPrx.checkedCast(prx)
