@@ -2,25 +2,29 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import Ice
-import IceStorm
-Ice.loadSlice('src/downloader.ice')
-import Downloader
 import binascii
 import time
+import Ice
+# pylint: disable=E0401
+import Downloader
+Ice.loadSlice('src/downloader.ice')
+# pylint: disable=E0602
 
 BLOCK_SIZE = 10240
 
 class ProgressStatus(Downloader.ProgressEvent):
+    '''clip progress status'''
     def __init__(self, client):
         self.client = client
 
     def notify(self, clipdata, current=None):
-        if self.client == None:
+        '''notify status'''
+        if self.client is None:
             return
         self.client.diccionario[clipdata.URL] = clipdata.status
 
 def receive(transfer, destination_file):
+    '''receive file from download server'''
     with open(destination_file, 'wb') as file_contents:
         remoteEOF = False
         while not remoteEOF:
@@ -34,22 +38,27 @@ def receive(transfer, destination_file):
         transfer.end()
 
 class User(Ice.Application):
+    '''client class starting without servers'''
     def __init__(self):
         self.servers = {}
 
     def Opciones(self, current=None):
-        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de canciones\n4.descargar canción\n5.obtener canción\n6.servidores desplegados\n7.salir de la aplicación')
+        '''opciones del menú'''
+        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de \
+        canciones\n4.descargar canción\n5.obtener canción\n6.servidores des\
+        plegados\n7.salir de la aplicación')
 
     def Actuar(self, x, prx, current=None):
-        if x==1:
+        '''acciones de cada una de las opciones'''
+        if x == 1:
             name = input('introduzca el nombre del servidor: ')
             try:
                 nuevo = prx.make(name)
-                self.servers[name]=nuevo
+                self.servers[name] = nuevo
             except Downloader.SchedulerAlreadyExists:
                 print('error: scheduler ya existe')
 
-        elif x==2:
+        elif x == 2:
             name = input('introduzca el nombre del servidor a eliminar: ')
             try:
                 prx.kill(name)
@@ -57,7 +66,7 @@ class User(Ice.Application):
             except Downloader.SchedulerNotFound:
                 print('error: scheduler no encontrado')
 
-        elif x==3:
+        elif x == 3:
             name = input('servidor al que realizar la solicitud: ')
             if name in self.servers:
                 res = self.servers[name].getSongListAsync()
@@ -72,7 +81,7 @@ class User(Ice.Application):
             else:
                 print('error')
 
-        elif x==4:
+        elif x == 4:
             name = input('servidor al que realizar la solicitud: ')
             if name in self.servers:
                 URL = input('introduce la url: ')
@@ -85,55 +94,57 @@ class User(Ice.Application):
             else:
                 print('error')
 
-        elif x==5:
+        elif x == 5:
             name = input('servidor al que realizar la solicitud: ')
             if name in self.servers:
                 cancion = input('introduce el nombre de la canción: ')
-                res= self.servers[name].getAsync(cancion)
+                res = self.servers[name].getAsync(cancion)
                 while res.running():
                     print('transfiriendo...')
                     time.sleep(1.0)
                     if res.done():
                         print('[transferida]')
-                        prx_transf= res.result()
+                        prx_transf = res.result()
                 cancion = input('nuevo nombre de la canción: ')
                 nueva = cancion+".mp3"
                 receive(prx_transf, nueva)
             else:
                 print('error')
 
-        elif x==6:
+        elif x == 6:
             n = prx.availableSchedulers()
             print("%d servidor/es: %s" %  (n, list(self.servers.keys())))
 
-        elif x==7:
+        elif x == 7:
             print('ha seleccionado salir')
         else:
             print('opción incorrecta')
 
     def Main(self, prx, current=None):
+        '''main'''
         if prx.availableSchedulers() > 0:
             self.Opciones()
             x = int(input('introduzca una opción: '))
             if x != 7:
-                self.Actuar(x,prx)
+                self.Actuar(x, prx)
                 self.Main(prx)
         else:
-            posible=False
-            while not(posible):
+            posible = False
+            while not posible:
                 name = input('introduzca el nombre de un servidor: ')
                 try:
                     nuevo = prx.make(name)
-                    posible=True
-                    self.servers[name]=nuevo
+                    posible = True
+                    self.servers[name] = nuevo
                 except Downloader.SchedulerAlreadyExists:
                     print('error: scheduler ya existe')
-                    posible=False
-                if not(posible):
+                    posible = False
+                if not posible:
                     print('vuelva a intentarlo')
             self.Main(prx)
 
     def run(self, argv):
+        '''communication with factory'''
         proxy = self.communicator().stringToProxy(argv[1])
         factory = Downloader.SchedulerFactoryPrx.checkedCast(proxy)
         if not factory:
