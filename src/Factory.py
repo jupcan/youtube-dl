@@ -69,7 +69,6 @@ class WorkQueue(Thread):
         for job in iter(self.queue.get, self.QUIT):
             job.download()
             self.queue.task_done()
-
         self.queue.task_done()
         self.queue.put(self.CANCEL)
 
@@ -177,7 +176,7 @@ class SchedulerFactoryI(SchedulerFactory): ## por revisar
         self.adapter = adapter
 
     def availableSchedulers(self,current=None):
-        return len(self.servers)
+        return len(self.names)
 
     def kill(self,name,current=None):
         indice = 0

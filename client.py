@@ -104,7 +104,7 @@ class User(Ice.Application):
 
         elif x==6:
             n = prx.availableSchedulers()
-            print("%d servidores: %s" %  (n, list(self.servers.keys())))
+            print("%d servidor/es: %s" %  (n, list(self.servers.keys())))
 
         elif x==7:
             print('ha seleccionado salir')
