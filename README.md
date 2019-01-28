@@ -58,4 +58,6 @@ introduzca una opcion: 6
 introduzca una opcion: 7
 finalizando ejecucion
 ```
-*steps to setup the system can be found on the [proyect documentation](doc/doc.pdf)
+*steps to setup the system and all details about it can be found on the [documentation](doc/doc.pdf)
+
+:warning: disclaimer: this proyect has been developed for educational purposes, im not responsible of the use you may give to it, use it at your own risk :warning:
