@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import time
 import sys
+import time
 import Ice
 # pylint: disable=E0401
-import Downloader
 import IceStorm
-# pylint: disable=E1101
 Ice.loadSlice('downloader.ice')
-# pylint: disable=E0602
+import Downloader
+# pylint: disable=E1101
 
 KEY = 'Practica.IceStorm/TopicManager'
 TOPIC_NAME = 'SyncTopic'

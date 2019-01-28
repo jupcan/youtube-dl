@@ -6,8 +6,9 @@ import binascii
 import time
 import Ice
 # pylint: disable=E0401
-import Downloader
 Ice.loadSlice('src/downloader.ice')
+import Downloader
+# pylint: disable=E1101
 # pylint: disable=E0602
 
 BLOCK_SIZE = 10240
@@ -44,9 +45,9 @@ class User(Ice.Application):
 
     def Opciones(self, current=None):
         '''opciones del menú'''
-        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de \
-        canciones\n4.descargar canción\n5.obtener canción\n6.servidores des\
-        plegados\n7.salir de la aplicación')
+        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de' \
+        'canciones\n4.descargar canción\n5.obtener canción\n6.servidores des'\
+        'plegados\n7.salir de la aplicación')
 
     def Actuar(self, x, prx, current=None):
         '''acciones de cada una de las opciones'''

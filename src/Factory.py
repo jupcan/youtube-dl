@@ -9,10 +9,10 @@ import binascii
 import youtube_dl
 import Ice
 # pylint: disable=E0401
-from Downloader import *
 import IceStorm
-# pylint: disable=E1101
 Ice.loadSlice('downloader.ice')
+from Downloader import *
+# pylint: disable=E1101
 # pylint: disable=E0602
 
 class NullLogger:
@@ -38,7 +38,7 @@ DOWNLOADER_OPTS = {
 }
 
 def _download_mp3_(url, destination='./'):
-    '''synchronous download from youtube'''
+    '''synchronous download from youtubez'''
     options = {}
     task_status = {}
     def progress_hook(status):
@@ -168,7 +168,7 @@ class DownloadSchedulerI(DownloadScheduler, SyncEvent):
 
     def cancelTask(url):
         '''cancelar tarea de la cola'''
-        print('procesando')
+        print('procesando...')
 
 class SchedulerFactoryI(SchedulerFactory):
     '''implementacion de factoria'''
@@ -210,7 +210,7 @@ class SchedulerFactoryI(SchedulerFactory):
         if not name in self.names:
             self.names.append(name)
             print('downloader {}: creándose...'.format(name))
-            #properties = self.ic.getProperties()
+            properties = self.ic.getProperties()
             id = Ice.stringToIdentity(name)
             self.ids.append(id)
             controller = DownloadSchedulerI(name)
@@ -222,7 +222,7 @@ class SchedulerFactoryI(SchedulerFactory):
             controller.publicador = SyncEventPrx.uncheckedCast(sync)
             statsproxy = self.statstopic.getPublisher()
             controller.stats = ProgressEventPrx.uncheckedCast(statsproxy)
-            #downloader = DownloadSchedulerPrx.checkedCast(prx)
+            downloader = DownloadSchedulerPrx.checkedCast(prx)
         else:
             raise SchedulerAlreadyExists()
         return DownloadSchedulerPrx.checkedCast(prx)
@@ -235,10 +235,11 @@ class Server(Ice.Application):
         if proxy is None:
             print("property '{}' not set".format(key))
             return None
+
         print("using IceStorm in: '%s'" % key)
         return IceStorm.TopicManagerPrx.checkedCast(proxy)
 
-    def run(self):
+    def run(self, argv):
         '''creación de canales'''
         topic_mgr = self.get_topic_manager()
         if not topic_mgr:
