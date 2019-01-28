@@ -59,4 +59,6 @@ introduzca una opcion: 7
 finalizando ejecucion
 ```
 *steps to setup the system and all details about it can be found on the [documentation](doc/doc.pdf)  
-:warning: **disclaimer: this proyect has been developed for educational purposes, use it at your own risk** :warning:  
+```
+:warning: **disclaimer: this proyect has been developed for educational purposes, use it at your own risk** :warning: 
+```
