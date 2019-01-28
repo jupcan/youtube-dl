@@ -175,9 +175,7 @@ class SchedulerFactoryI(SchedulerFactory):
     def __init__(self, adapter, ic, synctopic, statstopic):
         self.synctopic = synctopic
         self.statstopic = statstopic
-        self.adapters = []
-        self.names = []
-        self.ids = []
+        self.adapters, self.names, self.ids = [], [], []
         self.ic = ic
         self.adapter = adapter
 
