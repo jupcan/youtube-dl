@@ -18,3 +18,44 @@ pip3 install zeroc-ice
 ```
 sudo apt-get install youtube-dl
 ```
+
+## execution example
+```
+1.crear nuevo servidor
+2.eliminar servidor
+3.ver lista de canciones
+4.descargar cancion
+5.obtener cancion
+6.servidores desplegados
+7.salir de la aplicacion
+introduzca una opcion: 1
+introduzca el nombre del servidor: s1
+introduzca una opcion: 4
+servidor al que realizar la solicitud: s1
+introduce la url: https://www.youtube.com/watch?v=iX−QaNzd−0Y
+descargando...
+[descargada]
+introduzca una opcion: 3
+servidor al que realizar la solicitud: s1
+obteniendo lista de canciones...
+[obtenida]
+./Milky Chance − Stolen Dance (Album Version).mp3
+introduzca una opcion: 1
+introduzca el nombre del servidor: s2
+introduzca una opcion: 3
+servidor al que realizar la solicitud: s2
+obteniendo lista de canciones...
+[obtenida]
+./Milky Chance − Stolen Dance (Album Version).mp3
+introduzca una opcion: 5
+servidor al que realizar la solicitud: s1
+introduce el nombre: ./Milky Chance − Stolen Dance (Album Version).mp3
+transfiriendo...
+[transferida]
+nuevo nombre de la cancion: milky
+introduzca una opcion: 6
+2 servidor/es: [’s1’, ’s2’]
+introduzca una opcion: 7
+finalizando ejecucion
+```
+*steps to setup the system can be found on the [proyect documentation](doc/doc.pdf)
