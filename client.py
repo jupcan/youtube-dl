@@ -38,7 +38,7 @@ class User(Ice.Application):
         self.servers = {}
 
     def Opciones(self, current=None):
-        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de canciones\n4.descargar canción\n5.obtener canción\n6.salir')
+        print('1.crear nuevo servidor\n2.eliminar servidor\n3.ver lista de canciones\n4.descargar canción\n5.obtener canción\n6.servidores desplegados\n7.salir de la aplicación')
 
     def Actuar(self, x, prx, current=None):
         if x==1:
@@ -76,7 +76,7 @@ class User(Ice.Application):
             name = input('servidor al que realizar la solicitud: ')
             if name in self.servers:
                 URL = input('introduce la url: ')
-                res=self.servers[name].addDownloadTaskAsync(URL)
+                res = self.servers[name].addDownloadTaskAsync(URL)
                 while res.running():
                     print('descargando...')
                     time.sleep(1.0)
@@ -103,6 +103,10 @@ class User(Ice.Application):
                 print('error')
 
         elif x==6:
+            n = prx.availableSchedulers()
+            print("%d servidores: %s" %  (n, list(self.servers.keys())))
+
+        elif x==7:
             print('ha seleccionado salir')
         else:
             print('opción incorrecta')
@@ -111,7 +115,7 @@ class User(Ice.Application):
         if prx.availableSchedulers() > 0:
             self.Opciones()
             x = int(input('introduzca una opción: '))
-            if x != 6:
+            if x != 7:
                 self.Actuar(x,prx)
                 self.Main(prx)
         else:
@@ -133,7 +137,7 @@ class User(Ice.Application):
         proxy = self.communicator().stringToProxy(argv[1])
         factory = Downloader.SchedulerFactoryPrx.checkedCast(proxy)
         if not factory:
-            raise RuntimeError('proxy factoría invalido')
+            raise RuntimeError('proxy factoría inválido')
         self.Main(factory)
         print('finalizando ejecución')
         return 0

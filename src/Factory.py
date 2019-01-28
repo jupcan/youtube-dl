@@ -167,7 +167,7 @@ class DownloadSchedulerI(DownloadScheduler,SyncEvent):
         print('en proceso')
 
 class SchedulerFactoryI(SchedulerFactory): ## por revisar
-    def __init__(self, adapter, ic,synctopic,statstopic):
+    def __init__(self,adapter,ic,synctopic,statstopic):
         self.synctopic = synctopic
         self.statstopic = statstopic
         self.adapters = []
@@ -175,10 +175,9 @@ class SchedulerFactoryI(SchedulerFactory): ## por revisar
         self.ids = []
         self.ic = ic
         self.adapter = adapter
-        self.contador = 0
 
     def availableSchedulers(self,current=None):
-        return self.contador
+        return len(self.servers)
 
     def kill(self,name,current=None):
         indice = 0
@@ -193,13 +192,11 @@ class SchedulerFactoryI(SchedulerFactory): ## por revisar
                         encontrado = True
                 if encontrado:
                     self.synctopic.unsubscribe(self.adapters[indice])
-                    self.contador = self.contador - 1
                     del(self.adapters[indice])
                     del(self.ids[indice])
                     del(self.names[indice])
         else:
             raise SchedulerNotFound()
-
 
     def make(self, name, current=None):
         if not(name in self.names):
@@ -209,14 +206,15 @@ class SchedulerFactoryI(SchedulerFactory): ## por revisar
             id = Ice.stringToIdentity(name)
             self.ids.append(id)
             controller = DownloadSchedulerI(name)
+            qos = {}
             prx = current.adapter.add(controller,id)
+            self.synctopic.subscribeAndGetPublisher(qos, prx)
             sync = self.synctopic.getPublisher()
             self.adapters.append(sync)
             controller.publicador = SyncEventPrx.uncheckedCast(sync)
             statsproxy = self.statstopic.getPublisher()
             controller.stats = ProgressEventPrx.uncheckedCast(statsproxy)
             downloader = DownloadSchedulerPrx.checkedCast(prx)
-            self.contador = self.contador + 1
         else:
             raise SchedulerAlreadyExists()
         return DownloadSchedulerPrx.checkedCast(prx)
@@ -240,6 +238,7 @@ class Server(Ice.Application):
 
         ic = self.communicator()
         adapter = ic.createObjectAdapter("PrinterAdapter")
+        qos = {}
         topic_name2 = "ProgressTopic"
         topic_name1 = "SyncTopic"
 
