@@ -60,6 +60,9 @@ introduzca una opcion: 6
 introduzca una opcion: 7
 finalizando ejecucion
 ```
+
+<p align="center"><img src="doc/icegridgui.jpeg"></p>  
+
 *steps to setup the system and all details about it can be found on the [documentation](doc/doc.pdf)  
 
 >:warning: **disclaimer: this software has been developed for educational purposes, use it at your own risk** :warning: 
